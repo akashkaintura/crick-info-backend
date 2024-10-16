@@ -1,22 +1,28 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const wss = require('./utils/websocket');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const matchRoutes = require('./routes/matchRoutes');
-const playerRoutes = require('./routes/playerRoutes');
-const { setupWebSocket } = require('./utils/websocket');
-const { streamLiveMatchData } = require('./controllers/matchController');
+const commentaryRoutes = require('./routes/commentaryRoutes');
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
-app.use('/api/matches', matchRoutes);
-app.use('/api/players', playerRoutes);
 
-const server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.get('/', (req, res) => {
+    res.send('Welcome to the Cricbuzz Clone Backend!');
 });
 
-const wss = setupWebSocket(server);
-streamLiveMatchData(wss);
+// Route definitions
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/matches', matchRoutes);
+app.use('/api/commentary', commentaryRoutes);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});

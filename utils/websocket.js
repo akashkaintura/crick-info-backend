@@ -1,8 +1,8 @@
 const WebSocket = require('ws');
 const { fetchMatchData } = require('../services/rapidApiService');
 
-const setupWebSocket = (server) => {
-    const wss = new WebSocket.Server({ server });
+const setupWebSocket = () => {
+    const wss = new WebSocket.Server({ port: 8080 });
 
     wss.on('connection', (ws) => {
         console.log('New client connected for live updates');
